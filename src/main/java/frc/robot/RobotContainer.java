@@ -9,8 +9,8 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
 import frc.robot.commands.CommandSwerveDrivetrain;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Telemetry;
@@ -19,7 +19,7 @@ import frc.robot.subsystems.Lightning;
 
 
 public class RobotContainer {
-    private final CommandXboxController diverController = new CommandXboxController(0);
+    private final CommandXboxController driverController = new CommandXboxController(0);
 
     public final Lightning leds = new Lightning(Constants.LedsProfile.id, Constants.LedsProfile.num_leds);
 
@@ -29,22 +29,34 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(TunerConstants.maxSpeed);
 
-    public final VisionAndOdometry visionAndOdometry = new VisionAndOdometry();
+    private final VisionAndOdometry visionAndOdometry = new VisionAndOdometry();
 
     private void configureBindings() {
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(
                 () -> new SwerveRequest.FieldCentric()
-                .withDeadband(TunerConstants.maxAngularRate* 0.1)
-                .withRotationalDeadband(TunerConstants.maxAngularRate * 0.1)
                 .withDriveRequestType(DriveRequestType.Velocity)
-                .withVelocityX(-diverController.getLeftY() * TunerConstants.maxSpeed)
-                .withVelocityY(-diverController.getLeftX() * TunerConstants.maxSpeed)
-                .withRotationalRate(-diverController.getRightX() * TunerConstants.maxAngularRate)
+                .withDeadband(TunerConstants.maxAngularRate * 0.1)
+                .withVelocityX(-driverController.getLeftY() * TunerConstants.maxSpeed)
+                .withVelocityY(-driverController.getLeftX() * TunerConstants.maxSpeed)
+                .withRotationalDeadband(TunerConstants.maxAngularRate * 0.1)
+                .withRotationalRate(-driverController.getRightX() * TunerConstants.maxAngularRate)
             )
         );
-        diverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        diverController.b().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+        driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        driverController.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+        driverController.rightBumper().whileTrue(
+            drivetrain.applyRequest(
+                () -> new SwerveRequest.FieldCentric()
+                .withDriveRequestType(DriveRequestType.Velocity)
+                .withDeadband(TunerConstants.maxAngularRate * 0.1)
+                .withVelocityX(-driverController.getLeftY() * TunerConstants.maxSpeed)
+                .withVelocityY(-driverController.getLeftX() * TunerConstants.maxSpeed)
+                .withRotationalRate(this.visionAndOdometry.getSpeakerPIDOutput() - driverController.getRightX() * TunerConstants.maxAngularRate)
+            )
+        );
+        driverController.rightBumper().onFalse(new InstantCommand(() -> this.visionAndOdometry.setPipelineTo3d()));
+
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
