@@ -185,12 +185,18 @@ public class VisionAndOdometry extends SubsystemBase {
     }
 
     /**
-     * Updates the speaker tracker PID controller and returns its output
+     * Sets the limelight pipeline for speaker specific tracking
+     */
+    public void setPipelineToSpeaker() {
+        checkAlliance();
+        setPipeline(this.speakerPipeline);
+    }
+    /**
+     * Updates the speaker tracker PID controller and returns its output.
+     * Sets the limelight pipelines to track the speaker, be sure to call setPipelineTo3d to restore 3d position pipeline.
      * @return double
      */
     public double getSpeakerPIDOutput() {
-        checkAlliance();
-        setPipeline(this.speakerPipeline);
         return this.speakerPID.calculate(getTx());
     }
 }
