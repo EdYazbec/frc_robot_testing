@@ -13,3 +13,10 @@ This is a repo where I am teaching myself some of the particulars of FRC robot t
 
 ## Stuff I tred unsuccessfully:
 - building auto aim using the limelight in its own command
+
+## Recomended VS Code IDE Extensions
+- JsonMeezilla.json
+- mhutchie.git-graph
+- streetsidesoftware.code-spell-checker
+- btamburrino.apex-javadoc
+- yzhang.markdown-all-in-one
