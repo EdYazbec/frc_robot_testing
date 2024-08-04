@@ -20,4 +20,13 @@ public class Constants {
         public static final double ki = 0.0;
         public static final double kd = 0.0;
     }
+
+    public static class SwerveProfile {
+        // gains will be scaled by TunerConstants.maxSpeed
+        public static class angularController {
+            public static final double kP = 0.1;
+            public static final double kI = 0;
+            public static final double kD = 0;
+        }
+    };
 }

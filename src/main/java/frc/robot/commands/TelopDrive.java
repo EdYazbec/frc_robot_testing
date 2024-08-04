@@ -10,17 +10,16 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
 
-
-public class AimAtSpeaker extends Command {
-    private Vision vision;
-    private CommandXboxController driverController;
+public class TelopDrive extends Command {
     private Drivetrain drivetrain;
+    private CommandXboxController driverController;
+    private Vision vision;
 
-    /** Creates a new AimAtSpeaker. */
-    public AimAtSpeaker(Drivetrain drivetrain, Vision vision, CommandXboxController driverController) {
+    /** Creates a new TelopDrive. */
+    public TelopDrive(Drivetrain drivetrain, CommandXboxController driverController, Vision vision) {
         this.drivetrain = drivetrain;
-        this.vision = vision;
         this.driverController = driverController;
+        this.vision = vision;
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(this.drivetrain);
@@ -30,15 +29,14 @@ public class AimAtSpeaker extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        // activate the speaker pipeline
-        this.vision.setPipelineToSpeaker();
-        this.drivetrain.setAngularControllerOnOff(true);
+        this.vision.setPipelineTo3d();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         // xy controls need to be flipped if we are red / blue
+        // there also seems to be a 90 degree rotation, might be from setting up the swerve drive
         if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
             this.drivetrain.setVelocityX(-this.driverController.getHID().getLeftY());
             this.drivetrain.setVelocityY(-this.driverController.getHID().getLeftX());
@@ -47,16 +45,14 @@ public class AimAtSpeaker extends Command {
             this.drivetrain.setVelocityX(this.driverController.getHID().getLeftY());
             this.drivetrain.setVelocityY(this.driverController.getHID().getLeftX());
         }
-        this.drivetrain.setAngularSetPoint(this.vision.getTx());
+        this.drivetrain.setVelocityAngular(-this.driverController.getHID().getRightX());
+        if (this.vision.goodPoseEstimation())
+            this.drivetrain.addVisionMeasurement(this.vision.getPose2d(), this.vision.getPosTimeStamp());
     }
 
     // Called once the command ends or is interrupted.
     @Override
-    public void end(boolean interrupted) {
-        // restore the 3d pipeline
-        this.vision.setPipelineTo3d();
-        this.drivetrain.setAngularControllerOnOff(false);
-    }
+    public void end(boolean interrupted) {}
 
     // Returns true when the command should end.
     @Override
