@@ -17,7 +17,7 @@ public class AimAtSpeaker extends Command {
     private Drivetrain drivetrain;
 
     /** Creates a new AimAtSpeaker. */
-    public AimAtSpeaker(Drivetrain drivetrain, Vision vision, CommandXboxController driverController) {
+    public AimAtSpeaker(Drivetrain drivetrain, CommandXboxController driverController, Vision vision) {
         this.drivetrain = drivetrain;
         this.vision = vision;
         this.driverController = driverController;

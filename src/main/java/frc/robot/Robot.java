@@ -30,7 +30,9 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void disabledPeriodic() {}
+    public void disabledPeriodic() {
+        CommandScheduler.getInstance().schedule(this.robotContainer.updatePosFromVision);
+    }
 
     @Override
     public void disabledExit() {}
