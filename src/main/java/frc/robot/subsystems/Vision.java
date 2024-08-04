@@ -4,57 +4,28 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
-import frc.robot.generated.TunerConstants;
 
 
-public class VisionAndOdometry extends SubsystemBase {
-    // a PID controller for targeting at the speaker
-    private PIDController speakerPID = new PIDController(
-        Constants.VisionProfile.kp,
-        Constants.VisionProfile.ki,
-        Constants.VisionProfile.kd
-    );
-
-    // an object to handle position estimation using the drive train and vision updates
-    public SwerveDrivePoseEstimator robotPose = new SwerveDrivePoseEstimator(
-        TunerConstants.kinematics, 
-        TunerConstants.DriveTrain.getPigeon2().getRotation2d(),
-        new SwerveModulePosition[] {
-            TunerConstants.DriveTrain.getModule(0).getPosition(false),
-            TunerConstants.DriveTrain.getModule(1).getPosition(false),
-            TunerConstants.DriveTrain.getModule(2).getPosition(false),
-            TunerConstants.DriveTrain.getModule(3).getPosition(false)
-        },
-        new Pose2d(new Translation2d(0, 0), new Rotation2d(0))
-    );
-
+public class Vision extends SubsystemBase {
     // objects to facilitate position estimates from limelight 
     private LimelightHelpers.PoseEstimate limelightPoseEstimation = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.VisionProfile.limelightName);
     private Debouncer goodUpdateFilter = new Debouncer(0.1, Debouncer.DebounceType.kRising);
-    private Field2d field = new Field2d();
 
     // The pipeline the limelight should use
     private int speakerPipeline;
 
     /** Creates a new VisionAndOdometry. */
-    public VisionAndOdometry() {        
-        SmartDashboard.putData("Field", field);
-        
+    public Vision() {        
         checkAlliance();
 
         // set the starting pipeline to 3d pos to start
@@ -64,17 +35,13 @@ public class VisionAndOdometry extends SubsystemBase {
     @Override
     public void periodic() {
         this.limelightPoseEstimation = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.VisionProfile.limelightName);
-        updateOdometry();
-        SmartDashboard.putNumber("Field_X", robotPose.getEstimatedPosition().getX());
-        SmartDashboard.putNumber("Field_Y", robotPose.getEstimatedPosition().getY());
-        SmartDashboard.putNumber("Field_Rot", robotPose.getEstimatedPosition().getRotation().getDegrees());
     }
 
     /**
      * Returns true if the there is a good vision update
      * @return bool
      */
-    private boolean goodPoseEstimation() {
+    public boolean goodPoseEstimation() {
         boolean updateGood = true;
 
         if (this.getTranslation().getX() == 0.0)
@@ -109,7 +76,7 @@ public class VisionAndOdometry extends SubsystemBase {
      * Returns the 2d position from the limelight position estimation object.
      * @return Pose2d
      */
-    private Pose2d getPose2d() {
+    public Pose2d getPose2d() {
         return this.limelightPoseEstimation.pose;
     }
 
@@ -117,33 +84,8 @@ public class VisionAndOdometry extends SubsystemBase {
      * Returns the timestamp in seconds from the limelight position estimation object.
      * @return double
      */
-    private double getPosTimeStamp() {
+    public double getPosTimeStamp() {
         return this.limelightPoseEstimation.timestampSeconds;
-    }
-
-    /**
-     * Updates the robotPose object if the most recent position estimation from the limelight was good.
-     */
-    private void updateOdometry() {
-        if (goodPoseEstimation()) {
-            robotPose.addVisionMeasurement(getPose2d(), getPosTimeStamp());
-        }
-
-        robotPose.update(
-            TunerConstants.DriveTrain.getPigeon2().getRotation2d(),
-            new SwerveModulePosition[] {
-                TunerConstants.DriveTrain.getModule(0).getPosition(false),
-                TunerConstants.DriveTrain.getModule(1).getPosition(false),
-                TunerConstants.DriveTrain.getModule(2).getPosition(false),
-                TunerConstants.DriveTrain.getModule(3).getPosition(false)
-            }
-        );
-
-        field.setRobotPose(
-            robotPose.getEstimatedPosition().getX(), 
-            robotPose.getEstimatedPosition().getY(), 
-            robotPose.getEstimatedPosition().getRotation()
-        );
     }
 
     /**
@@ -165,7 +107,7 @@ public class VisionAndOdometry extends SubsystemBase {
      * Returns the angular offset from the target in x direction from the limelight in degrees.
      * @return double
      */
-    private double getTx() {
+    public double getTx() {
         return LimelightHelpers.getTX(Constants.VisionProfile.limelightName);
     }
 
@@ -185,12 +127,11 @@ public class VisionAndOdometry extends SubsystemBase {
     }
 
     /**
-     * Updates the speaker tracker PID controller and returns its output
-     * @return double
+     * Sets the limelight pipeline for speaker specific tracking
      */
-    public double getSpeakerPIDOutput() {
+    public void setPipelineToSpeaker() {
         checkAlliance();
         setPipeline(this.speakerPipeline);
-        return this.speakerPID.calculate(getTx());
     }
+
 }
