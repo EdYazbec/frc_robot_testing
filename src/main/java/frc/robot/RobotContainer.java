@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -29,20 +33,30 @@ public class RobotContainer {
     private final Command aimAtSpeaker = new AimAtSpeaker(this.drivetrain, this.driverController, this.vision);
     public  final Command updatePosFromVision = new UpdatePosFromVision(this.drivetrain, this.vision).ignoringDisable(true);
 
+    // path planner autos
+    private final PathPlannerAuto centerNoteAuto = new PathPlannerAuto("CenterNote");
+    private final SendableChooser<Command> pathChooser;
+
+
     private void configureBindings() {
         drivetrain.setDefaultCommand(telopDrive);
         driverController.a().onTrue(new InstantCommand(() -> this.drivetrain.setWheelBreak(true)));
         driverController.a().onFalse(new InstantCommand(() -> this.drivetrain.setWheelBreak(false)));
+        driverController.x().onTrue(new InstantCommand(() -> this.drivetrain.toggleFieldRelative()));
         driverController.y().onTrue(new InstantCommand(() -> this.drivetrain.resetHeading()));
         driverController.rightBumper().whileTrue(this.aimAtSpeaker);
     }
 
     public RobotContainer() {
         configureBindings();
+        pathChooser = AutoBuilder.buildAutoChooser();
+        // pathChooser.setDefaultOption("None", noneAuto);
+        SmartDashboard.putData("AutoPathChooser", pathChooser);
     }
 
     public Command getAutonomousCommand() {
-        return Commands.print("No autonomous command configured");
+        return this.centerNoteAuto;
+        // return Commands.print("No autonomous command configured"); 
     }
 
 }

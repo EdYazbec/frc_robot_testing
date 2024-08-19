@@ -135,7 +135,6 @@ public class TunerConstants {
     private static final double kBackRightXPosInches = -7.5;
     private static final double kBackRightYPosInches = -7.5;
 
-
     private static final SwerveModuleConstants FrontLeft = ConstantCreator.createModuleConstants(
         kFrontLeftSteerMotorId, 
         kFrontLeftDriveMotorId, 

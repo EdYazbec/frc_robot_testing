@@ -6,7 +6,7 @@
         {
             "label": "ClearRioDepoly",
             "type": "shell",
-            "command": "ssh admin@10.55.77.2 'echo 'files before clear' && ls -R /home/lvuser/deploy/ && sudo rm -rf /home/lvuser/deploy/pathplanner/ && echo '' && echo 'files after clear' && ls -R /home/lvuser/deploy/'",
+            "command": "ssh admin@10.55.77.2 'echo 'files before clear' && ls -R /home/lvuser/deploy/ && sudo rm -rf /home/lvuser/deploy/pathplanner/ && echo ' ' && echo 'files after clear' && ls -R /home/lvuser/deploy/'",
             "args": [],
             "problemMatcher": []
         }

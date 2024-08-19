@@ -36,7 +36,6 @@ public class TelopDrive extends Command {
     @Override
     public void execute() {
         // xy controls need to be flipped if we are red / blue
-        // there also seems to be a 90 degree rotation, might be from setting up the swerve drive
         if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
             this.drivetrain.setVelocityX(-this.driverController.getHID().getLeftY());
             this.drivetrain.setVelocityY(-this.driverController.getHID().getLeftX());
