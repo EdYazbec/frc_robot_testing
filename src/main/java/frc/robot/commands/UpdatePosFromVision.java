@@ -5,20 +5,20 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Vision;
 
 public class UpdatePosFromVision extends Command {
-    private Drivetrain drivetrain;
+    private CommandSwerveDrivetrain drivetrain;
     private Vision vision;
 
     /** Creates a new UpdatePosFromVision. */
-    public UpdatePosFromVision(Drivetrain drivetrain, Vision vision) {
+    public UpdatePosFromVision(CommandSwerveDrivetrain drivetrain, Vision vision) {
         this.drivetrain = drivetrain;
         this.vision = vision;
         
         // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(this.vision);
+        // addRequirements(this.vision);
     }
 
     // Called when the command is initially scheduled.

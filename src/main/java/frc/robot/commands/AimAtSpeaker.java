@@ -4,23 +4,30 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DriverStation;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.Constants;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Vision;
 
 
 public class AimAtSpeaker extends Command {
     private Vision vision;
     private CommandXboxController driverController;
-    private Drivetrain drivetrain;
+    private CommandSwerveDrivetrain drivetrain;
+    private SwerveRequest.FieldCentric telopDrive;
+    private PIDController angularController = Constants.SwerveProfile.angularController;
 
     /** Creates a new AimAtSpeaker. */
-    public AimAtSpeaker(Drivetrain drivetrain, CommandXboxController driverController, Vision vision) {
+    public AimAtSpeaker(CommandSwerveDrivetrain drivetrain, CommandXboxController driverController, Vision vision, SwerveRequest.FieldCentric telopDrive) {
         this.drivetrain = drivetrain;
         this.vision = vision;
         this.driverController = driverController;
+        this.telopDrive = telopDrive;
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(this.drivetrain);
@@ -32,22 +39,18 @@ public class AimAtSpeaker extends Command {
     public void initialize() {
         // activate the speaker pipeline
         this.vision.setPipelineToSpeaker();
-        this.drivetrain.setAngularControllerOnOff(true);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        // xy controls need to be flipped if we are red / blue
-        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-            this.drivetrain.setVelocityX(-this.driverController.getHID().getLeftY());
-            this.drivetrain.setVelocityY(-this.driverController.getHID().getLeftX());
-        }
-        else {
-            this.drivetrain.setVelocityX(this.driverController.getHID().getLeftY());
-            this.drivetrain.setVelocityY(this.driverController.getHID().getLeftX());
-        }
-        this.drivetrain.setAngularSetPoint(this.vision.getTx());
+        this.angularController.setSetpoint(0);
+
+        // we are mutating the telop drive request from robot container. applying new requests doesnt apply for whatever reason
+        this.telopDrive
+        .withVelocityX(driverController.getLeftY() * TunerConstants.maxSpeed)
+        .withVelocityY(driverController.getLeftX() * TunerConstants.maxSpeed)
+        .withRotationalRate(this.angularController.calculate(this.vision.getTx()) * TunerConstants.maxAngularRate);
     }
 
     // Called once the command ends or is interrupted.
@@ -55,7 +58,6 @@ public class AimAtSpeaker extends Command {
     public void end(boolean interrupted) {
         // restore the 3d pipeline
         this.vision.setPipelineTo3d();
-        this.drivetrain.setAngularControllerOnOff(false);
     }
 
     // Returns true when the command should end.

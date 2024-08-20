@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.util.PIDConstants;
+
+import edu.wpi.first.math.controller.PIDController;
+
 /** Add your docs here. */
 public class Constants {
     public class LedsProfile {
@@ -23,15 +27,18 @@ public class Constants {
 
     public static class SwerveProfile {
         // gains will be scaled by TunerConstants.maxSpeed
-        public static class angularController {
-            public static final double kP = 0.1;
-            public static final double kI = 0;
-            public static final double kD = 0;
-        };
-        public static class driveController {
-            public static final double kP = 0.1;
-            public static final double kI = 0;
-            public static final double kD = 0;
-        };
+        public static PIDConstants translationControllerConstants = new PIDConstants(0.1, 0, 0);
+        public static PIDController translationController = new PIDController(
+            translationControllerConstants.kP,
+            translationControllerConstants.kI,
+            translationControllerConstants.kD
+        );
+
+        public static PIDConstants angularControllerConstants = new PIDConstants(0.1, 0, 0);
+        public static PIDController angularController = new PIDController(
+            angularControllerConstants.kP, 
+            angularControllerConstants.kI,
+            angularControllerConstants.kD
+        );
     };
 }

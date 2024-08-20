@@ -17,10 +17,12 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         this.robotContainer = new RobotContainer();
         this.robotContainer.leds.setDisabledLightShow();
+        this.robotContainer.vision.setPipelineTo3d();
     }
     
     @Override
     public void robotPeriodic() {
+        // CommandScheduler.getInstance().schedule(this.robotContainer.updatePosFromVision);
         CommandScheduler.getInstance().run();
     }
 
@@ -61,7 +63,9 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void teleopPeriodic() {}
+    public void teleopPeriodic() {
+        CommandScheduler.getInstance().schedule(this.robotContainer.updatePosFromVision);
+    }
 
     @Override
     public void teleopExit() {}
