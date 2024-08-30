@@ -14,10 +14,7 @@ This is a repo where I am teaching myself some of the particulars of FRC robot p
 - Building limelight auto aim into its own command
 
 ## Stuff I tried unsuccessfully:
-- Everything has worked so far, I guess I need to make things more challenging .-.
-
-## Stuff I tried unsuccessfully:
-- TBD
+- Path planner
 
 ## Recommended VS Code IDE Extensions
 - JsonMeezilla.json

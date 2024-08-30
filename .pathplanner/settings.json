@@ -7,9 +7,9 @@
     "Note To Note"
   ],
   "autoFolders": [],
-  "defaultMaxVel": 0.5,
-  "defaultMaxAccel": 3.0,
+  "defaultMaxVel": 0.25,
+  "defaultMaxAccel": 0.5,
   "defaultMaxAngVel": 90.0,
-  "defaultMaxAngAccel": 720.0,
-  "maxModuleSpeed": 5.0
+  "defaultMaxAngAccel": 90.0,
+  "maxModuleSpeed": 0.25
 }

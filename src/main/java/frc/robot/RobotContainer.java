@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -32,8 +33,8 @@ public class RobotContainer {
 
     // Commands
     private final SwerveRequest.FieldCentric telopDrive = new SwerveRequest.FieldCentric()
-      .withDeadband(TunerConstants.maxSpeed * 0.1)
-      .withRotationalDeadband(TunerConstants.maxAngularRate * 0.1)
+      .withDeadband(Constants.SwerveProfile.maxSpeed * 0.1)
+      .withRotationalDeadband(Constants.SwerveProfile.maxAngularRate * 0.1)
       .withDriveRequestType(DriveRequestType.Velocity);
     private final SwerveRequest.SwerveDriveBrake xBrake = new SwerveRequest.SwerveDriveBrake();
     private final Command aimAtSpeaker = new AimAtSpeaker(this.drivetrain, this.driverController, this.vision, this.telopDrive);
@@ -46,9 +47,9 @@ public class RobotContainer {
     private void configureBindings() {
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() -> telopDrive
-                .withVelocityX(driverController.getLeftY() * TunerConstants.maxSpeed)
-                .withVelocityY(driverController.getLeftX() * TunerConstants.maxSpeed)
-                .withRotationalRate(-driverController.getRightX() * TunerConstants.maxAngularRate)
+                .withVelocityX(-driverController.getLeftY() * Constants.SwerveProfile.maxSpeed)
+                .withVelocityY(-driverController.getLeftX() * Constants.SwerveProfile.maxSpeed)
+                .withRotationalRate(-driverController.getRightX() * Constants.SwerveProfile.maxAngularRate)
             )
         );
         driverController.a().whileTrue(drivetrain.applyRequest(() -> xBrake));
@@ -58,7 +59,7 @@ public class RobotContainer {
     public RobotContainer() {
         // expose commands to the path planner gui
         NamedCommands.registerCommand("AimAtSpeaker", this.aimAtSpeaker);
-        
+
         configureBindings();
 
         // build a sendable chooser for path planner paths
@@ -67,8 +68,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return this.centerNoteAuto;
-        // return Commands.print("No autonomous command configured"); 
+        return pathChooser.getSelected();
     }
 
 }

@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.util.PIDConstants;
 
 import edu.wpi.first.math.controller.PIDController;
+import frc.robot.generated.TunerConstants;
 
 /** Add your docs here. */
 public class Constants {
@@ -33,6 +34,8 @@ public class Constants {
             translationControllerConstants.kI,
             translationControllerConstants.kD
         );
+        public static double maxSpeed = TunerConstants.kSpeedAt12VoltsMps;
+        public static double maxAngularRate = Math.PI;
 
         public static PIDConstants angularControllerConstants = new PIDConstants(0.1, 0, 0);
         public static PIDController angularController = new PIDController(

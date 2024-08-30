@@ -53,6 +53,9 @@ public class Vision extends SubsystemBase {
         if (this.getRotation2d().getDegrees() == 0.0)
             updateGood = false;
 
+        if (LimelightHelpers.getCurrentPipelineIndex(Constants.VisionProfile.limelightName) != 2)
+            updateGood = false;
+
         return goodUpdateFilter.calculate(updateGood);
     }
 

@@ -10,7 +10,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
-import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Vision;
 
@@ -48,9 +47,9 @@ public class AimAtSpeaker extends Command {
 
         // we are mutating the telop drive request from robot container. applying new requests doesnt apply for whatever reason
         this.telopDrive
-        .withVelocityX(driverController.getLeftY() * TunerConstants.maxSpeed)
-        .withVelocityY(driverController.getLeftX() * TunerConstants.maxSpeed)
-        .withRotationalRate(this.angularController.calculate(this.vision.getTx()) * TunerConstants.maxAngularRate);
+        .withVelocityX(-driverController.getLeftY() * Constants.SwerveProfile.maxSpeed)
+        .withVelocityY(-driverController.getLeftX() * Constants.SwerveProfile.maxSpeed)
+        .withRotationalRate(this.angularController.calculate(this.vision.getTx()) * Constants.SwerveProfile.maxAngularRate);
     }
 
     // Called once the command ends or is interrupted.
