@@ -45,11 +45,11 @@ public class AimAtSpeaker extends Command {
     public void execute() {
         this.angularController.setSetpoint(0);
 
-        // we are mutating the telop drive request from robot container. applying new requests doesnt apply for whatever reason
+        // we are mutating the telop drive request from robot container. applying new requests doesn't apply for whatever reason
         this.telopDrive
-        .withVelocityX(-driverController.getLeftY() * Constants.SwerveProfile.maxSpeed)
-        .withVelocityY(-driverController.getLeftX() * Constants.SwerveProfile.maxSpeed)
-        .withRotationalRate(this.angularController.calculate(this.vision.getTx()) * Constants.SwerveProfile.maxAngularRate);
+        .withVelocityX(driverController.getLeftY() * Constants.SwerveProfile.maxSpeed)
+        .withVelocityY(driverController.getLeftX() * Constants.SwerveProfile.maxSpeed)
+        .withRotationalRate(this.angularController.calculate(this.vision.getTx()));
     }
 
     // Called once the command ends or is interrupted.

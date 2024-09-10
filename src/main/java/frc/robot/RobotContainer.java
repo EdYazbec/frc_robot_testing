@@ -15,12 +15,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.subsystems.Vision;
 import frc.robot.commands.AimAtSpeaker;
 import frc.robot.commands.UpdatePosFromVision;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Lightning;
+import frc.robot.subsystems.Lightning;  
 
 
 public class RobotContainer {
@@ -30,6 +31,7 @@ public class RobotContainer {
     public final Lightning leds = new Lightning(Constants.LedsProfile.id, Constants.LedsProfile.num_leds);
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain;
     public final Vision vision = new Vision();
+    // private final Telemetry logger = new Telemetry(Constants.SwerveProfile.maxSpeed);
 
     // Commands
     private final SwerveRequest.FieldCentric telopDrive = new SwerveRequest.FieldCentric()
@@ -41,20 +43,32 @@ public class RobotContainer {
     public  final Command updatePosFromVision = new UpdatePosFromVision(this.drivetrain, this.vision).ignoringDisable(true);
 
     // path planner autos
-    private final PathPlannerAuto centerNoteAuto = new PathPlannerAuto("CenterNote");
     private final SendableChooser<Command> pathChooser;
 
     private void configureBindings() {
         drivetrain.setDefaultCommand(
             drivetrain.applyRequest(() -> telopDrive
-                .withVelocityX(-driverController.getLeftY() * Constants.SwerveProfile.maxSpeed)
-                .withVelocityY(-driverController.getLeftX() * Constants.SwerveProfile.maxSpeed)
+                .withVelocityX(driverController.getLeftY() * Constants.SwerveProfile.maxSpeed)
+                .withVelocityY(driverController.getLeftX() * Constants.SwerveProfile.maxSpeed)
                 .withRotationalRate(-driverController.getRightX() * Constants.SwerveProfile.maxAngularRate)
             )
         );
-        driverController.a().whileTrue(drivetrain.applyRequest(() -> xBrake));
+        // driverController.a().whileTrue(drivetrain.applyRequest(() -> xBrake));
         driverController.rightBumper().whileTrue(this.aimAtSpeaker);
+    
+        /* sysid controls */
+        /* Bindings for drivetrain characterization */
+        /* These bindings require multiple buttons pushed to swap between quastatic and dynamic */
+        /* Back/Start select dynamic/quasistatic, Y/X select forward/reverse direction */
+        // driverController.back().and(driverController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        // driverController.back().and(driverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        // driverController.start().and(driverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        // driverController.start().and(driverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+    
+        // enable logging
+        // drivetrain.registerTelemetry(logger::telemeterize);
     }
+
 
     public RobotContainer() {
         // expose commands to the path planner gui

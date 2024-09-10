@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.049807190523472,
+        "y": 5.550603828480384
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.1498071905234721,
+        "y": 5.550603828480384
+      },
+      "isLocked": false,
+      "linkedName": "SpeakerCenter"
+    },
+    {
+      "anchor": {
+        "x": 1.4829275372836466,
+        "y": 5.204107551072246
+      },
+      "prevControl": {
+        "x": 1.3829275372836465,
+        "y": 5.204107551072246
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "StageNote"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 1.0,
+    "maxAcceleration": 1.0,
+    "maxAngularVelocity": 90.0,
+    "maxAngularAcceleration": 90.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Speaker To Note",
+  "previewStartingState": {
+    "rotation": 180.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

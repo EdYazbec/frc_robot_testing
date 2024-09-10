@@ -4,5 +4,6 @@
         "Debouncer",
         "Odometry",
         "Telop"
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

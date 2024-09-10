@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
@@ -27,7 +28,7 @@ public class Vision extends SubsystemBase {
     /** Creates a new VisionAndOdometry. */
     public Vision() {        
         checkAlliance();
-
+        
         // set the starting pipeline to 3d pos to start
         setPipeline(Constants.VisionProfile.posFromSpeakerPipeline);
     }
@@ -35,6 +36,7 @@ public class Vision extends SubsystemBase {
     @Override
     public void periodic() {
         this.limelightPoseEstimation = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.VisionProfile.limelightName);
+        SmartDashboard.putBoolean("GoodLimeLightPos", this.goodPoseEstimation());
     }
 
     /**

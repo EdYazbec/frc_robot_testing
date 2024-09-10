@@ -28,7 +28,7 @@ public class Constants {
 
     public static class SwerveProfile {
         // gains will be scaled by TunerConstants.maxSpeed
-        public static PIDConstants translationControllerConstants = new PIDConstants(0.1, 0, 0);
+        public static PIDConstants translationControllerConstants = new PIDConstants(2, 0, 0);
         public static PIDController translationController = new PIDController(
             translationControllerConstants.kP,
             translationControllerConstants.kI,
@@ -37,7 +37,7 @@ public class Constants {
         public static double maxSpeed = TunerConstants.kSpeedAt12VoltsMps;
         public static double maxAngularRate = Math.PI;
 
-        public static PIDConstants angularControllerConstants = new PIDConstants(0.1, 0, 0);
+        public static PIDConstants angularControllerConstants = new PIDConstants(0.3, 0, 0);
         public static PIDController angularController = new PIDController(
             angularControllerConstants.kP, 
             angularControllerConstants.kI,

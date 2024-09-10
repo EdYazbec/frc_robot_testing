@@ -25,18 +25,18 @@ public class Robot extends TimedRobot {
     
     @Override
     public void robotPeriodic() {
-        CommandScheduler.getInstance().schedule(this.robotContainer.updatePosFromVision);
         CommandScheduler.getInstance().run();
     }
-
+    
     @Override
     public void disabledInit() {
         this.robotContainer.vision.setPipelineTo3d();
         this.robotContainer.leds.setDisabledLightShow();
     }
-
+    
     @Override
-    public void disabledPeriodic() {
+    public void disabledPeriodic() {    
+        CommandScheduler.getInstance().schedule(this.robotContainer.updatePosFromVision);
         this.robotContainer.vision.setPipelineTo3d();
     }
 
@@ -67,7 +67,9 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void teleopPeriodic() {}
+    public void teleopPeriodic() {
+        CommandScheduler.getInstance().schedule(this.robotContainer.updatePosFromVision);
+    }
 
     @Override
     public void teleopExit() {}

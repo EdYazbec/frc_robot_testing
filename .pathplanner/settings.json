@@ -3,13 +3,13 @@
   "robotLength": 0.381,
   "holonomicMode": true,
   "pathFolders": [
-    "Speaker To Note",
-    "Note To Note"
+    "Note To Speaker",
+    "Speaker To Note"
   ],
   "autoFolders": [],
-  "defaultMaxVel": 0.25,
-  "defaultMaxAccel": 0.5,
+  "defaultMaxVel": 1.0,
+  "defaultMaxAccel": 1.0,
   "defaultMaxAngVel": 90.0,
   "defaultMaxAngAccel": 90.0,
-  "maxModuleSpeed": 0.25
+  "maxModuleSpeed": 1.0
 }
